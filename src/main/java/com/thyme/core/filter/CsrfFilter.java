@@ -1,4 +1,4 @@
-package com.thyme.filter;
+package com.thyme.core.filter;
 
 import java.io.IOException;
 import java.util.List;

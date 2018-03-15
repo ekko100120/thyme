@@ -1,4 +1,4 @@
-package com.thyme.filter.xss;
+package com.thyme.core.filter.xss;
 
 import java.io.IOException;
 

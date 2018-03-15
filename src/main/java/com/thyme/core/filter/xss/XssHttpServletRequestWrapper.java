@@ -1,4 +1,4 @@
-package com.thyme.filter.xss;
+package com.thyme.core.filter.xss;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletRequestWrapper;

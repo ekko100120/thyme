@@ -11,8 +11,30 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
     <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
     <context:component-scan base-package="com.thyme" />
+    <!---===========开启annotation注解-====================->
     <mvc:annotation-driven />
-    <!-- 拦截器 -->
+     <!-============静态资源文件映射========================-->
+    <mvc:resources location="/static/" mapping="/static/**"/>
+
+    <!---============= thymeleaf 模板解析器==============================-->
+    <!-- 1.模板解析器  -->
+    <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
+        <property name="prefix" value="/WEB-INF/templates/" />
+        <property name="suffix" value=".html" />
+        <property name="templateMode" value="HTML5" />
+        <property name="cacheable" value="false" />
+        <property name="characterEncoding" value="UTF-8"/>
+    </bean>
+    <!-- 2.模板引擎  -->
+    <bean id="templateEngine" class="org.thymeleaf.spring4.SpringTemplateEngine">
+        <property name="templateResolver" ref="templateResolver" />
+    </bean>
+    <!-- 3.视图解析器  -->
+    <bean class="org.thymeleaf.spring4.view.ThymeleafViewResolver">
+        <property name="templateEngine" ref="templateEngine" />
+        <property name="characterEncoding"  value="UTF-8" />
+    </bean>
+    <!--===============配置interceptor拦截器=====================-->
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**" />
@@ -21,21 +43,16 @@
             <mvc:exclude-mapping path="/swagger**" />
             <mvc:exclude-mapping path="/webjars/**" />
             <mvc:exclude-mapping path="/configuration/**" />
-            <bean class="top.ibase4j.core.interceptor.MaliciousRequestInterceptor">
+            <bean class="com.thyme.core.interceptor.MaliciousRequestInterceptor">
                 <property name="minRequestIntervalTime" value="1000" />
                 <property name="maxMaliciousTimes" value="0" />
-                <property name="nextInterceptor">
-                    <array>
-                        <bean class="top.ibase4j.core.interceptor.LocaleInterceptor" />
-                        <bean class="top.ibase4j.core.interceptor.EventInterceptor" />
-                    </array>
-                </property>
+
             </bean>
         </mvc:interceptor>
     </mvc:interceptors>
     <!--  -->
     <mvc:view-resolvers>
-        <mvc:jsp cache-views="false" prefix="/WEB-INF/jsp/" suffix=".jsp" />
+        <mvc:freemarker cache-views="false" prefix="/WEB-INF/jsp/" suffix=".jsp" />
     </mvc:view-resolvers>
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <description>注解controller方法适配器</description>

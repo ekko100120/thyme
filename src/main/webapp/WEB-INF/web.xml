@@ -5,11 +5,45 @@
          version="3.0">
   <display-name>thyme Demo</display-name>
 
-  <!--初始化context-->
+   <!--welcome-file-list-->
+  <welcome-file-list>
+    <welcome-file>index.jsp</welcome-file>
+  </welcome-file-list>
+  <!-- 1. configuration of Listener -->
+  <listener>
+    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
+  </listener>
+  <listener>
+    <listener-class>com.thyme.core.ServerListener</listener-class>
+  </listener>
+  <!--2.初始化context++++++++++++++++-->
+  <context-param>
+    <param-name>RootConfigLocation</param-name>
+    <param-value>classpath:conf/Spring-root.xml</param-value>
+  </context-param>
   <context-param>
     <param-name>contextConfigLocation</param-name>
     <param-value>classpath:conf/Spring-config.xml</param-value>
   </context-param>
+  <!--3.配置DispatchServlet++++++++++++++++-->
+  <servlet>
+    <servlet-name>SpringMVC</servlet-name>
+    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+    <init-param>
+      <param-name>contextConfigLocation</param-name>
+      <param-value>classpath:conf/Spring-servlet.xml</param-value>
+    </init-param>
+    <load-on-startup>1</load-on-startup>
+    <async-supported>true</async-supported>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>SpringMVC</servlet-name>
+    <url-pattern>/</url-pattern>
+  </servlet-mapping>
+  <!--配置filter++++++++++++++++-->
   <filter>
     <filter-name>encodingFilter</filter-name>
     <filter-class>org.springframework.web.filter.CharacterEncodingFilter</filter-class>
@@ -29,7 +63,7 @@
   </filter-mapping>
   <filter>
     <filter-name>csrfFilter</filter-name>
-    <filter-class>com.thyme.filter.CsrfFilter</filter-class>
+    <filter-class>com.thyme.core.filter.CsrfFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>csrfFilter</filter-name>
@@ -37,7 +71,7 @@
   </filter-mapping>
   <filter>
     <filter-name>xssFilter</filter-name>
-    <filter-class>com.thyme.filter.xss.XssFilter</filter-class>
+    <filter-class>com.thyme.core.filter.xss.XssFilter</filter-class>
   </filter>
   <filter-mapping>
     <filter-name>xssFilter</filter-name>
@@ -55,33 +89,17 @@
     <filter-name>shiroFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
-  <listener>
-    <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>com.thyme.core.ServerListener</listener-class>
-  </listener>
-  <servlet>
-    <servlet-name>SpringMVC</servlet-name>
-    <servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
-    <init-param>
-      <param-name>contextConfigLocation</param-name>
-      <param-value>classpath:conf/Spring-servlet.xml</param-value>
-    </init-param>
-    <load-on-startup>1</load-on-startup>
-    <async-supported>true</async-supported>
-  </servlet>
-  <servlet-mapping>
-    <servlet-name>SpringMVC</servlet-name>
-    <url-pattern>/</url-pattern>
-  </servlet-mapping>
+
+  <error-page>
+    <error-code>404</error-code>
+    <location>/error/404.html</location>
+  </error-page>
+  <error-page>
+    <error-code>500</error-code>
+    <location>/error/500</location>
+  </error-page>
   <session-config>
     <session-timeout>30</session-timeout>
   </session-config>
-  <welcome-file-list>
-    <welcome-file>index.jsp</welcome-file>
-  </welcome-file-list>
+
 </web-app>
