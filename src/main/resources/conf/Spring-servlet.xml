@@ -11,15 +11,15 @@
                         http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
     <!-- 自动扫描该包，使SpringMVC认为包下用了@controller注解的类是控制器 -->
     <context:component-scan base-package="com.thyme" />
-    <!---===========开启annotation注解-====================->
     <mvc:annotation-driven />
-     <!-============静态资源文件映射========================-->
-    <mvc:resources location="/static/" mapping="/static/**"/>
-
+     <!--============静态资源文件映射========================-->
+    <mvc:resources mapping="/static/**" location="/static/" />
+    <!-- 资源重定向(仅作为后台使用不提供静态资源) -->
+    <mvc:resources mapping="upload/**" location="/WEB-INF/upload/" cache-period="300" />
     <!---============= thymeleaf 模板解析器==============================-->
     <!-- 1.模板解析器  -->
     <bean id="templateResolver" class="org.thymeleaf.spring4.templateresolver.SpringResourceTemplateResolver">
-        <property name="prefix" value="/WEB-INF/templates/" />
+        <property name="prefix" value="/WEB-INF/template/" />
         <property name="suffix" value=".html" />
         <property name="templateMode" value="HTML5" />
         <property name="cacheable" value="false" />
@@ -35,6 +35,7 @@
         <property name="characterEncoding"  value="UTF-8" />
     </bean>
     <!--===============配置interceptor拦截器=====================-->
+
     <mvc:interceptors>
         <mvc:interceptor>
             <mvc:mapping path="/**" />
@@ -72,8 +73,5 @@
         <!-- 内存中的最大值 -->
         <property name="maxInMemorySize" value="40960" />
     </bean>
-    <!-- 资源重定向(仅作为后台使用不提供静态资源) -->
-    <mvc:resources mapping="upload/**" location="/WEB-INF/upload/" cache-period="300" />
-    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
-    <mvc:resources mapping="webjars/**" location="classpath:/META-INF/resources/webjars/"/>
+
 </beans>
