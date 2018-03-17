@@ -17,6 +17,7 @@ import org.springframework.web.servlet.HandlerInterceptor;
  * @version 2016年5月20日 下午3:16:57
  */
 
+
   public class MaliciousRequestInterceptor implements HandlerInterceptor {
   private static Logger logger = LoggerFactory.getLogger(MaliciousRequestInterceptor.class);
   private Boolean allRequest = false; // 拦截所有请求,否则拦截相同请求

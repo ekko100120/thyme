@@ -14,7 +14,7 @@
     <!---===========开启annotation注解-====================->
     <mvc:annotation-driven />
      <!-============静态资源文件映射========================-->
-    <mvc:resources location="/static/" mapping="/static/**"/>
+    <mvc:resources location="/WEB-INF/static/" mapping="/static/**"/>
 
     <!---============= thymeleaf 模板解析器==============================-->
     <!-- 1.模板解析器  -->
@@ -51,9 +51,6 @@
         </mvc:interceptor>
     </mvc:interceptors>
     <!--  -->
-    <mvc:view-resolvers>
-        <mvc:freemarker cache-views="false" prefix="/WEB-INF/jsp/" suffix=".jsp" />
-    </mvc:view-resolvers>
     <bean class="org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter">
         <description>注解controller方法适配器</description>
         <property name="messageConverters">
@@ -74,6 +71,4 @@
     </bean>
     <!-- 资源重定向(仅作为后台使用不提供静态资源) -->
     <mvc:resources mapping="upload/**" location="/WEB-INF/upload/" cache-period="300" />
-    <mvc:resources mapping="swagger-ui.html" location="classpath:/META-INF/resources/"/>
-    <mvc:resources mapping="webjars/**" location="classpath:/META-INF/resources/webjars/"/>
 </beans>
