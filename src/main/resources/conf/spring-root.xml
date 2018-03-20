@@ -13,28 +13,17 @@
         <context:exclude-filter type="annotation" expression="org.springframework.stereotype.Controller" />
     </context:component-scan>
 
-    <!--配置propertyPlaceholderconfiguration-->
+    <!--++++++++配置propertyPlaceholderconfiguration+++++++++++++=-->
     <!--<context:property-placeholder location="classpath:conf/proper1.properties,classpath:conf/proper2.properties" system-properties-mode="NEVER"/>-->
-    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer" >
-        <property name="location" value="classpath:conf/cfg.properties"/>
+    <bean class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+        <property name="order" value="1"/>
+        <property name="ignoreUnresolvablePlaceholders" value="true"/>
         <property name="locations">
             <list>
-                <value>classpath:conf/proper1.properties</value>
-                <value>classpath:conf/proper2.properties</value>
+                <value>classpath:/conf/sql.properties</value>
+                <value>classpath:/conf/log.properties</value>
             </list>
         </property>
-
     </bean>
 
-    <!-- 引入SPRING配置文件 -->
-    <!-- <import resource="spring/mq.xml"/> -->
-    <!-- <import resource="spring/dubbo.xml" /> -->
-    <!--<import resource="classpath*:spring/motan.xml" />-->
-    <!--<import resource="classpath:spring/redis.xml" />-->
-    <!--<import resource="classpath:spring/redisson.xml" />-->
-    <!--<import resource="classpath:spring/dataSource.xml"/>-->
-    <!--<import resource="classpath:spring/scheduler.xml"/>-->
-    <!--<import resource="classpath:spring/mybatis.xml"/>-->
-    <!-- <import resource="spring/mq-listener.xml"/>
-    <import resource="spring/mq-sender.xml"/> -->
 </beans>

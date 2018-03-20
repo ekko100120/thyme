@@ -10,25 +10,30 @@
   <welcome-file-list>
     <welcome-file>index.jsp</welcome-file>
   </welcome-file-list>
-  <!-- 1. configuration of Listener -->
+  <!--2.初始化配置context++++++++++++++++-->
+  <context-param>
+    <param-name>contextConfigLocation</param-name>
+    <param-value>
+      classpath:conf/spring-root.xml,
+      classpath:conf/spring-druid.xml,
+      classpath:conf/dataSource.xml
+    </param-value>
+  </context-param>
+  <!--<context-param>-->
+    <!--<param-name>DruidConfigLocation</param-name>-->
+    <!--<param-value>classpath:conf/spring-druid.xml</param-value>-->
+  <!--</context-param>-->
+   <!--1. configuration of Listener-->
   <listener>
     <listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
   </listener>
-  <listener>
-    <listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>
-  </listener>
-  <listener>
-    <listener-class>com.thyme.core.ServerListener</listener-class>
-  </listener>
-  <!--2.初始化context++++++++++++++++-->
-  <context-param>
-    <param-name>RootConfigLocation</param-name>
-    <param-value>classpath:conf/Spring-root.xml</param-value>
-  </context-param>
-  <context-param>
-    <param-name>contextConfigLocation</param-name>
-    <param-value>classpath:conf/Spring-config.xml</param-value>
-  </context-param>
+  <!--<listener>-->
+    <!--<listener-class>org.springframework.web.util.IntrospectorCleanupListener</listener-class>-->
+  <!--</listener>-->
+  <!--<listener>-->
+    <!--<listener-class>com.thyme.core.ServerListener</listener-class>-->
+  <!--</listener>-->
+
   <!--3.配置DispatchServlet++++++++++++++++-->
   <servlet>
     <servlet-name>SpringMVC</servlet-name>
@@ -44,6 +49,44 @@
     <servlet-name>SpringMVC</servlet-name>
     <url-pattern>/</url-pattern>
   </servlet-mapping>
+
+  <!-- druid监控平台监控器 Servlet-->
+  <servlet>
+    <servlet-name>DruidStatView</servlet-name>
+    <servlet-class>com.alibaba.druid.support.http.StatViewServlet</servlet-class>
+    <init-param>
+      <!-- 允许清空统计数据 -->
+      <param-name>resetEnable</param-name>
+      <param-value>true</param-value>
+    </init-param>
+    <!--  网站面临攻击的可能性就很大，安全性不靠保障，所以建议配置账户信息。 -->
+    <init-param>
+      <!-- 用户名 -->
+      <param-name>loginUsername</param-name>
+      <param-value>druid</param-value>
+    </init-param>
+    <init-param>
+      <!-- 密码 -->
+      <param-name>loginPassword</param-name>
+      <param-value>druid</param-value>
+    </init-param>
+  </servlet>
+  <!-- 路由映射地址 -->
+  <servlet-mapping>
+    <servlet-name>DruidStatView</servlet-name>
+    <url-pattern>/druid/*</url-pattern>
+  </servlet-mapping>
+
+   <!--+++++++++++++++测试用sevlet+++++++++++++++++++-->
+  <servlet>
+    <servlet-name>TestServlet</servlet-name>
+    <servlet-class>com.thyme.servlet.TestServlet</servlet-class>
+  </servlet>
+  <servlet-mapping>
+    <servlet-name>TestServlet</servlet-name>
+    <url-pattern>/test/*</url-pattern>
+  </servlet-mapping>
+
   <!--配置filter++++++++++++++++-->
   <filter>
     <filter-name>encodingFilter</filter-name>
@@ -76,6 +119,31 @@
   </filter>
   <filter-mapping>
     <filter-name>xssFilter</filter-name>
+    <url-pattern>/*</url-pattern>
+  </filter-mapping>
+
+  <!-- 开启druid stat过滤,WebStatFilter用于采集web-jdbc关联监控的数据，注意放在其它的过滤器以及dispatcher前面，很重哦 -->
+  <filter>
+    <filter-name>druidWebStatFilter</filter-name>
+    <filter-class>com.alibaba.druid.support.http.WebStatFilter</filter-class>
+    <!-- 排除静态资源 -->
+    <init-param>
+      <param-name>exclusions</param-name>
+      <param-value>/template/*,*.js,*.css,/druid*,*.jsp,*.swf,*.html </param-value>
+    </init-param>
+    <!-- druid能够知道当前的session的用户,根据需要，把其中的xxx.user修改为你user信息保存在session中的sessionName。 -->
+    <init-param>
+      <param-name>principalSessionName</param-name>
+      <param-value>session.user</param-value>
+    </init-param>
+    <!-- druid 0.2.7版本开始支持profile，配置profileEnable能够监控单个url调用的sql列表 -->
+    <init-param>
+      <param-name>profileEnable</param-name>
+      <param-value>true</param-value>
+    </init-param>
+  </filter>
+  <filter-mapping>
+    <filter-name>druidWebStatFilter</filter-name>
     <url-pattern>/*</url-pattern>
   </filter-mapping>
   <!--<filter>-->
