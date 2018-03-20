@@ -219,7 +219,7 @@ fabric.properties
 .idea/dataSources/7d0b4380-d322-4141-a24d-66260c2b30fc/_src_/
 .idea/dataSources/7d0b4380-d322-4141-a24d-66260c2b30fc/_staging_/
 .idea/dataSources/7d0b4380-d322-4141-a24d-66260c2b30fc/storage.xml
-./idea/
+.idea/*
 src/main/java/com/thyme/service/
 src/main/resources/META-INF/
 src/main/webapp/WEB-INF/upload/
