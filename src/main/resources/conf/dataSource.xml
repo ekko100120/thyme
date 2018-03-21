@@ -7,21 +7,66 @@
     <bean id="datasource"
           class="org.springframework.jdbc.datasource.DriverManagerDataSource">
         <!-- jdbc基础信息配置 -->
-        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
-        <property name="url" value="${url}"></property>
+        <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>
+        <property name="url" value="jdbc:mysql://localhost:3306/demo?useSSL=false"></property>
         <property name="username" value="${jdbc.username}"></property>
         <property name="password" value="${jdbc.password}"></property>
     </bean>
+
+    <bean id="druid" class="com.alibaba.druid.pool.DruidDataSource"  init-method="init" destroy-method="close">
+        <!-- jdbc基础信息配置 -->
+        <property name="driverClassName" value="${jdbc.driverClassName}"></property>
+        <property name="url" value="${jdbc.url}"></property>
+        <property name="username" value="${jdbc.username}"></property>
+        <property name="password" value="${jdbc.password}"></property>
+
+        <!-- 配置初始化大小、最小、最大 -->
+        <property name="initialSize" value="${jdbc.pool.initialSize}" />
+        <property name="minIdle" value="${jdbc.pool.minIdle}" />
+        <property name="maxActive" value="${jdbc.pool.maxActive}" />
+        <!-- 配置获取连接等待超时的时间 单位毫秒-->
+        <property name="maxWait" value="${jdbc.pool.maxWait}" />
+
+        <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->
+        <property name="timeBetweenEvictionRunsMillis" value="60000" />
+        <!-- 验证连接有效与否的SQL，不同的数据配置不同  mysql select 1 || oracle select 1 from dual-->
+        <property name="validationQuery" value="select 1 " />
+        <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->
+        <property name="minEvictableIdleTimeMillis" value="300000" />
+        <!-- 建议配置为true，不影响性能，并且保证安全性。申请连接的时候检测，如果空闲时间大于timeBetweenEvictionRunsMillis，执行validationQuery检测连接是否有效。 -->
+        <property name="testWhileIdle" value="true" />
+        <!-- 申请连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能。 -->
+        <property name="testOnBorrow" value="false" />
+        <!-- 归还连接时执行validationQuery检测连接是否有效，做了这个配置会降低性能 -->
+        <property name="testOnReturn" value="false" />
+        <!-- 打开PSCache，并且指定每个连接上PSCache的大小,PSCache对支持游标的数据库性能提升巨大，比如说oracle。在mysql下建议关闭。 -->
+        <property name="poolPreparedStatements" value="false" />
+        <property name="maxPoolPreparedStatementPerConnectionSize"
+                  value="20" />
+        <!-- 监控中有jdbcSqlStat，原因是：com.alibaba.druid.statJdbcDataSourceStat中的createSqlStat方法中，
+              用了一个map来存放所有的sql语句，这样会导致线上触发FullGC，可将此处注释掉 -->
+
+        <!-- 映射慢sql -->
+        <property name="filters" value="stat,wall,slf4j" />
+        <property name="proxyFilters">
+            <list>
+                <ref bean="statfilter" />
+                <ref bean="logFilter" />
+            </list>
+        </property>
+
+    </bean>
+
     <bean id="jdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
         <property name="dataSource" >
-            <ref bean="datasource" />
+            <ref bean="druid" />
         </property>
     </bean>
 
     <bean id="SpringTableOperatorBean" class="com.thyme.db.TableOperator"
           scope="prototype">
         <property name="dataSource">
-            <ref bean="datasource" />
+            <ref bean="druid" />
         </property>
     </bean>
 

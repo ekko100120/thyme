@@ -25,21 +25,17 @@ public class TableOperator {
   }
 
   private  void dropTable() throws SQLException {
+    String sql = "DROP TABLE  'tasks' ";
     Connection connection = dataSource.getConnection();
     Statement statement = connection.createStatement();
-    statement.execute("DROP TABLE  t_big ");
+    statement.execute(sql);
     statement.close();
     connection.close();
   }
   public void createTable() throws SQLException {
     StringBuffer ddl = new StringBuffer();
-    ddl.append("CREATE TABLE t_big (FID INT AUTO INCREMENT PRIMARY KEY)");
-    for (int i = 0; i <COUNT ; i++) {
-      ddl.append(",");
-      ddl.append("F"+i);
-      ddl.append("BIGINT NULL");
-    }
-    ddl.append(")");
+    String sql ="CREATE TABLE IF NOT EXISTS tasks ( task_id INT(11) NOT NULL AUTO_INCREMENT, subject VARCHAR(45) DEFAULT NULL, start_date DATE DEFAULT NULL, end_date DATE DEFAULT NULL, description VARCHAR(200) DEFAULT NULL, PRIMARY KEY (task_id)) ENGINE=InnoDB;";
+    ddl.append(sql);
     Connection connection = dataSource.getConnection();
     Statement statement = connection.createStatement();
     statement.execute(ddl.toString());
@@ -49,20 +45,19 @@ public class TableOperator {
 
   public void insert() throws  Exception{
     StringBuffer dll = new StringBuffer();
-    dll.append("INSERT INTO t_big (");
+    String sql="INSERT INTO tasks(subject,start_date,end_date,description) VALUES " ;
+    dll.append(sql);
+    System.out.println(sql.toString());
     for (int i = 0; i <COUNT ; i++) {
-      if (i != 0){
-        dll.append(",");
-      }
-      dll.append("?");
+      dll.append("('任务-"+i+"', now(), now(),'Description "+i+"'),");
     }
-    dll.append(")");
+    dll.append("('任务-"+COUNT+"', now(),now(),'Description "+COUNT+"')");
     Connection connection = dataSource.getConnection();
     System.err.println(dll.toString());
     PreparedStatement statement = connection.prepareStatement(dll.toString());
-    for (int i = 0; i < COUNT; ++i) {
-      statement.setInt(i + 1, i);
-    }
+//    for (int i = 0; i < COUNT; ++i) {
+//      statement.setInt(i + 1, i);
+//    }
     statement.execute();
     statement.close();
 

@@ -228,6 +228,11 @@
       <artifactId>mysql-connector-java</artifactId>
       <version>5.1.43</version>
     </dependency>
+    <dependency>
+      <groupId>org.postgresql</groupId>
+      <artifactId>postgresql</artifactId>
+      <version>42.2.1</version>
+    </dependency>
     <!--c3p0-->
     <dependency>
       <groupId>c3p0</groupId>
@@ -301,7 +306,7 @@
             <server>TomcatServer</server>
             <username>kenny</username>
             <password>1001</password>
-            <port>8888</port>
+            <port>8889</port>
             <uriEncoding>UTF-8</uriEncoding>
             <finalName>sad</finalName>
           </configuration>
